@@ -1,5 +1,5 @@
 {
-    "name": "silangtech/queue",
+    "name": "silangtech/util",
     "description" : "工具类",
     "type": "application",
     "keywords": ["SilangPHP","Server","util","php framework"],
