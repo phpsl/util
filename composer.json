@@ -1,0 +1,24 @@
+{
+    "name": "silangtech/queue",
+    "description" : "工具类",
+    "type": "application",
+    "keywords": ["SilangPHP","Server","util","php framework"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "shengsheng",
+            "email": "9448923@qq.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.0"
+    },
+    "_comment": "SilangPHP/Util",
+    "autoload": {
+        "files": [ "src/function.php" ],
+        "psr-4": {
+            "SilangPHP\\Util\\": "src/",
+            "test\\": "test/"
+        }
+    }
+}
