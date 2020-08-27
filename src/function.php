@@ -129,3 +129,38 @@ if (!function_exists('xmlCurl')) {
     }
 }
 
+if (!function_exists('checkSign')) {
+    function checkSign($params, $key) {
+        $sign = $params['sign'];
+        unset($params['sign']);
+        $params['jh_sign'] = $key;
+        ksort($params);
+        $signStr = http_build_query($params);
+
+        // 解决兼容ios 获取不到IP 报错信息带空格问题(?)
+        $ary = explode('system_name', $params['extra_data']);  //IPADDRESS
+        if ($ary[1]) {
+//        $str = substr($ary[1], 0, 30);
+            $str = $ary[1];
+            if (preg_match("/\s/", $str)) {
+                //实际要传+号，但解释过来是传了空格
+                $signStr = str_replace('+', '%2B', $signStr);
+//            $signStr = str_replace('+', '%20', $signStr);
+            }
+        }
+        return $sign == md5($signStr);
+    }
+}
+
+if (!function_exists('config'))
+{
+    /**
+     * 获取配置相关
+     * @param $key
+     * @return mixed
+     */
+    function config($key)
+    {
+        return \SilangPHP\Config::get($key);
+    }
+}
