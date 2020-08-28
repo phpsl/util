@@ -164,3 +164,14 @@ if (!function_exists('config'))
         return \SilangPHP\Config::get($key);
     }
 }
+
+if (!function_exists('redisKeyInc'))
+{
+    function redisKeyInc($key, $expire = 86400) {
+        $redis = \SilangPHP\Cache\Redis;
+        if (($ret = $redis::incr($key)) == 1) {
+            $redis::expire($key, $expire);
+        }
+        return $ret;
+    }
+}
