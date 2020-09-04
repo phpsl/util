@@ -130,7 +130,19 @@ if (!function_exists('xmlCurl')) {
 }
 
 if (!function_exists('checkSign')) {
-    function checkSign($params, $key) {
+    function checkSign($params, $key='') {
+        $sign = $params['sign'];
+        unset($params['sign']);
+        $params['appkey'] = $key;
+        ksort($params);
+        $Str = implode("",$params);
+        $signStr = md5($str);
+        return $sign == md5($signStr);
+    }
+}
+
+if (!function_exists('checkSignOld')) {
+    function checkSignOld($params, $key) {
         $sign = $params['sign'];
         unset($params['sign']);
         $params['jh_sign'] = $key;
@@ -162,16 +174,5 @@ if (!function_exists('config'))
     function config($key)
     {
         return \SilangPHP\Config::get($key);
-    }
-}
-
-if (!function_exists('redisKeyInc'))
-{
-    function redisKeyInc($key, $expire = 86400) {
-        $redis = \SilangPHP\Cache\Redis;
-        if (($ret = $redis::incr($key)) == 1) {
-            $redis::expire($key, $expire);
-        }
-        return $ret;
     }
 }
