@@ -135,7 +135,7 @@ if (!function_exists('checkSign')) {
         unset($params['sign']);
         $params['appkey'] = $key;
         ksort($params);
-        $Str = implode("",$params);
+        $str = implode("",$params);
         $signStr = md5($str);
         return $sign == md5($signStr);
     }
