@@ -35,22 +35,22 @@ if (!function_exists('checkParams')) {
         //获取的数据类型
         switch ($type) {
             case 'post':
-                $data = \SilangPHP\SilangPHP::$request->posts;
+                $data = \SilangPHP\SilangPHP::$app->request->posts;
                 break;
             case 'get':
-                $data = \SilangPHP\SilangPHP::$request->gets;
+                $data = \SilangPHP\SilangPHP::$app->request->gets;
                 break;
             case 'request':
-                $data = \SilangPHP\SilangPHP::$request->request;
+                $data = \SilangPHP\SilangPHP::$app->request->request;
                 break;
             case 'json':
-                $data = json_decode(\SilangPHP\SilangPHP::$request->getRaw(), true);
+                $data = json_decode(\SilangPHP\SilangPHP::$app->request->getRaw(), true);
                 break;
             case 'xml':
-                $data = json_decode(json_encode(simplexml_load_string(\SilangPHP\SilangPHP::$request->getRaw())), true);
+                $data = json_decode(json_encode(simplexml_load_string(\SilangPHP\SilangPHP::$app->request->getRaw())), true);
                 break;
             default:
-                $data = \SilangPHP\SilangPHP::$request->posts;
+                $data = \SilangPHP\SilangPHP::$app->request->posts;
         }
         $ret = [];
 
