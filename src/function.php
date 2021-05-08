@@ -1,18 +1,4 @@
 <?php
-
-// outputJson
-if (!function_exists('outputJson')) {
-    function outputJson($ret, $msg = '', $data = []) {
-        return json_encode(
-            [
-                'ret' => (string)$ret,
-                'msg' => $msg ? $msg : ($ret == 1 ? 'success' : 'fail'),
-                'data' => $data
-            ]
-        );
-    }
-}
-
 // urlDecode
 if (!function_exists('urlDecode')) {
     function urlDecode($data) {
@@ -25,58 +11,6 @@ if (!function_exists('urlDecode')) {
         } else {
             return urldecode($data);
         }
-    }
-}
-
-// checkParams
-if (!function_exists('checkParams')) {
-    function checkParams($parmas, $type = 'post', $mustParams = [], $urlDecode = false) {
-        $parmas = is_array($parmas) ? $parmas : array($parmas);
-        //获取的数据类型
-        switch ($type) {
-            case 'post':
-                $data = \SilangPHP\SilangPHP::$app->request->posts;
-                break;
-            case 'get':
-                $data = \SilangPHP\SilangPHP::$app->request->gets;
-                break;
-            case 'request':
-                $data = \SilangPHP\SilangPHP::$app->request->request;
-                break;
-            case 'json':
-                $data = json_decode(\SilangPHP\SilangPHP::$app->request->getRaw(), true);
-                break;
-            case 'xml':
-                $data = json_decode(json_encode(simplexml_load_string(\SilangPHP\SilangPHP::$app->request->getRaw())), true);
-                break;
-            default:
-                $data = \SilangPHP\SilangPHP::$app->request->posts;
-        }
-        $ret = [];
-
-        //需要urldecode的字段
-        $urlDecodeAry = $urlDecode && is_array($urlDecode) ? $urlDecode
-            : ($urlDecode && is_string($urlDecode) ? array($urlDecode) : []);
-        //过滤逻辑
-        foreach ($parmas as $parma) {
-            if (!isset($data[$parma]) || $data[$parma] === '') {
-                if (in_array($parma, $mustParams)) {
-                    $uri = $_SERVER["REQUEST_URI"];
-                    $query = $_SERVER["QUERY_STRING"];
-                    throw new \Exception('参数错误:' . $parma . "参数不能为空");
-                } else {
-                    if(!isset($data[$parma])) {
-                        continue;
-                    }
-                }
-            }
-            if (!in_array($parma, $urlDecodeAry)) {
-                $ret[$parma] = $data[$parma];
-            } else {
-                $ret[$parma] = urlDecode($data[$parma]);
-            }
-        }
-        return $ret;
     }
 }
 

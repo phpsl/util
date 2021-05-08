@@ -36,13 +36,13 @@ class Util
             return self::$client_ip;
         }
         //分析代理IP
-        if( isset($_SERVER['HTTP_X_FORWARDED_FOR2']) )
+        if( isset(\SilangPHP\SilangPHP::$app->request->header['x-forwarded-for2']) )
         {
-            $_SERVER['HTTP_X_FORWARDED_FOR'] = $_SERVER['HTTP_X_FORWARDED_FOR2'];
+            \SilangPHP\SilangPHP::$app->request->header['x-forwarded-for2'] = \SilangPHP\SilangPHP::$app->request->header['x-forwarded-for2'];
         }
-        if( isset($_SERVER['HTTP_X_FORWARDED_FOR']) )
+        if( isset(\SilangPHP\SilangPHP::$app->request->header['x-forwarded-for']) )
         {
-            $arr = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+            $arr = explode(',', \SilangPHP\SilangPHP::$app->request->header['x-forwarded-for']);
             foreach ($arr as $ip)
             {
                 $ip = trim($ip);
@@ -53,14 +53,14 @@ class Util
         }
         else
         {
-            $client_ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+            $client_ip = isset(\SilangPHP\SilangPHP::$app->request->server['remote_addr']) ? \SilangPHP\SilangPHP::$app->request->server['remote_addr'] : '';
         }
         preg_match("/[\d\.]{7,15}/", $client_ip, $onlineip);
         if(empty($onlineip[0]))
         {
-            if(isset(\SilangPHP\Request::$header['x-real-ip']))
+            if(isset(\SilangPHP\SilangPHP::$app->request->header['x-real-ip']))
             {
-                $onlineip[0] = \SilangPHP\Request::$header['x-real-ip'];
+                $onlineip[0] = \SilangPHP\SilangPHP::$app->request->header['x-real-ip'];
             }
         }
         $client_ip = ! empty($onlineip[0]) ? $onlineip[0] : '0.0.0.0';
@@ -71,32 +71,32 @@ class Util
     /**
      * 是否手机移动端
      */
-    public static function isMobile() { 
+    public static function isMobile() {
         // 如果有HTTP_X_WAP_PROFILE则一定是移动设备
-        if (isset($_SERVER['HTTP_X_WAP_PROFILE'])) {
+        if (isset(\SilangPHP\SilangPHP::$app->request->header['x-wap-profile'])) {
           return true;
-        } 
+        }
         // 如果via信息含有wap则一定是移动设备,部分服务商会屏蔽该信息
-        if (isset($_SERVER['HTTP_VIA'])) { 
+        if (isset(\SilangPHP\SilangPHP::$app->request->header['via'])) {
           // 找不到为flase,否则为true
-          return stristr($_SERVER['HTTP_VIA'], "wap") ? true : false;
-        } 
+          return stristr(\SilangPHP\SilangPHP::$app->request->header['via'], "wap") ? true : false;
+        }
         // 脑残法，判断手机发送的客户端标志,兼容性有待提高。其中'MicroMessenger'是电脑微信
-        if (isset($_SERVER['HTTP_USER_AGENT'])) {
-          $clientkeywords = array('nokia','sony','ericsson','mot','samsung','htc','sgh','lg','sharp','sie-','philips','panasonic','alcatel','lenovo','iphone','ipod','blackberry','meizu','android','netfront','symbian','ucweb','windowsce','palm','operamini','operamobi','openwave','nexusone','cldc','midp','wap','mobile','MicroMessenger'); 
+        if (isset(\SilangPHP\SilangPHP::$app->request->header['user-agent'])) {
+          $clientkeywords = array('nokia','sony','ericsson','mot','samsung','htc','sgh','lg','sharp','sie-','philips','panasonic','alcatel','lenovo','iphone','ipod','blackberry','meizu','android','netfront','symbian','ucweb','windowsce','palm','operamini','operamobi','openwave','nexusone','cldc','midp','wap','mobile','MicroMessenger');
           // 从HTTP_USER_AGENT中查找手机浏览器的关键字
-          if (preg_match("/(" . implode('|', $clientkeywords) . ")/i", strtolower($_SERVER['HTTP_USER_AGENT']))) {
+          if (preg_match("/(" . implode('|', $clientkeywords) . ")/i", strtolower(\SilangPHP\SilangPHP::$app->request->header['user-agent']))) {
             return true;
-          } 
-        } 
+          }
+        }
         // 协议法，因为有可能不准确，放到最后判断
-        if (isset ($_SERVER['HTTP_ACCEPT'])) { 
+        if (isset (\SilangPHP\SilangPHP::$app->request->header['accept'])) {
           // 如果只支持wml并且不支持html那一定是移动设备
           // 如果支持wml和html但是wml在html之前则是移动设备
-          if ((strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') !== false) && (strpos($_SERVER['HTTP_ACCEPT'], 'text/html') === false || (strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') < strpos($_SERVER['HTTP_ACCEPT'], 'text/html')))) {
+          if ((strpos(\SilangPHP\SilangPHP::$app->request->header['accept'], 'vnd.wap.wml') !== false) && (strpos(\SilangPHP\SilangPHP::$app->request->header['accept'], 'text/html') === false || (strpos(\SilangPHP\SilangPHP::$app->request->header['accept'], 'vnd.wap.wml') < strpos(\SilangPHP\SilangPHP::$app->request->header['accept'], 'text/html')))) {
             return true;
-          } 
-        } 
+          }
+        }
         return false;
     }
 
